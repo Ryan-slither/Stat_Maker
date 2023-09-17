@@ -4,7 +4,6 @@ from tkinter import ttk, messagebox
 import data
 import matplotlib.pyplot as plt
 import pandas as pd
-import typing
 import numpy as np
 
 data_dict = {"GDP": data.gdp, "Population": data.population, "Crime": data.crime}
@@ -16,8 +15,10 @@ class Window:
 
         # Font Creation
         self.title_font = tkfont.Font(family="Helvetica", size=36)
+        self.header_font = self.make_button_font = tkfont.Font(family="Helvetica", size=12, weight="normal", underline=True)
         self.button_font = tkfont.Font(family="Helvetica", size=24, weight="normal")
         self.make_button_font = tkfont.Font(family="Helvetica", size=12, weight="normal")
+        self.text_box_font = tkfont.Font(family="Helvetica", size=5, weight="bold")
 
         # Bar Settings
         self.bar_title = "Untitled"
@@ -155,10 +156,10 @@ class Window:
         self.bar_sorted_check.grid(row=8, column=1, sticky="nsew", padx=5, pady=2)
 
         self.to_start_bar_button = tkinter.Button(self.bar_frame, text="To Start Page", font=self.make_button_font, command=self.make_start)
-        self.to_start_bar_button.grid(row=9, column=0, sticky="nsew", padx=5, pady=2)
+        self.to_start_bar_button.grid(row=9, column=0, sticky="nsw", padx=5, pady=2)
 
         self.make_bar_button = tkinter.Button(self.bar_frame, text="Make Bar Graph", font=self.make_button_font, command=self.get_bar_settings)
-        self.make_bar_button.grid(row=9, column=1, sticky="nsew", pady=2)
+        self.make_bar_button.grid(row=9, column=1, sticky="nse", padx=5, pady=2)
 
         if self.current_frame:
             self.current_frame.grid_forget()
@@ -302,10 +303,10 @@ class Window:
         self.scatter_line_check.grid(row=14, column=1, sticky="nsew", padx=5, pady=2)
 
         self.to_start_scatter_button = tkinter.Button(self.scatter_frame, text="To Start Page", font=self.make_button_font, command=self.make_start)
-        self.to_start_scatter_button.grid(row=15, column=0, sticky="nsew", padx=5, pady=2)
+        self.to_start_scatter_button.grid(row=15, column=0, sticky="nsw", padx=5, pady=2)
 
         self.make_scatter_button = tkinter.Button(self.scatter_frame, text="Make Scatter Graph", font=self.make_button_font, command=self.get_scatter_settings)
-        self.make_scatter_button.grid(row=15, column=1, sticky="nsew", pady=2)
+        self.make_scatter_button.grid(row=15, column=1, sticky="nse", padx=5, pady=2)
 
         if self.current_frame:
             self.current_frame.grid_forget()
@@ -315,7 +316,63 @@ class Window:
         self.fit_frame()
 
     def make_data_page(self):
-        pass
+        self.data_frame = tkinter.Frame(self.root, bg="light gray", relief="solid", borderwidth=4)
+
+        self.data_label = tkinter.Label(self.data_frame, text="Data Manipulation", font=self.title_font, bg="light gray")
+        self.data_label.grid(row=0, column=0, sticky="nsew", pady=15, columnspan=2)
+
+        self.change_data_label = tkinter.Label(self.data_frame, text="Change Between Columns:", font=self.header_font, bg="light gray")
+        self.change_data_label.grid(row=1, column=0, sticky="w", padx=5)
+
+        self.change_data_button = tkinter.Button(self.data_frame, text="Create Change Data", font=self.make_button_font, command=self.change_data)
+        self.change_data_button.grid(row=1, column=1, sticky="nsew", padx=5, pady=2)
+
+        self.data_drop_label1 = tkinter.Label(self.data_frame, text="Dataset 1:", font=self.make_button_font, bg="light gray")
+        self.data_drop_label1.grid(row=2, column=0, sticky="nsew", padx=5, pady=2)
+
+        self.change_data_drop1 = ttk.Combobox(self.data_frame, values=list(data_dict.keys()))
+        self.change_data_drop1.grid(row=2, column=1, sticky="nsew", padx=5, pady=2)
+
+        self.change_column_drop_label1 = tkinter.Label(self.data_frame, text="Data Column 1:", font=self.make_button_font, bg="light gray")
+        self.change_column_drop_label1.grid(row=3, column=0, sticky="nsew", padx=5, pady=2)
+
+        self.change_column_drop1 = ttk.Combobox(self.data_frame, values=[])
+        self.change_column_drop1.grid(row=3, column=1, sticky="nsew", padx=5, pady=2)
+
+        self.change_data_drop1.bind("<<ComboboxSelected>>", lambda _: self.fill_combo(data_drop=self.change_data_drop1, column_drop=self.change_column_drop1))
+
+        self.change_data_drop_label1 = tkinter.Label(self.data_frame, text="Dataset 2:", font=self.make_button_font, bg="light gray")
+        self.change_data_drop_label1.grid(row=4, column=0, sticky="nsew", padx=5, pady=2)
+
+        self.change_data_drop2 = ttk.Combobox(self.data_frame, values=list(data_dict.keys()))
+        self.change_data_drop2.grid(row=4, column=1, sticky="nsew", padx=5, pady=2)
+
+        self.change_column_drop_label2 = tkinter.Label(self.data_frame, text="Data Column 2:", font=self.make_button_font, bg="light gray")
+        self.change_column_drop_label2.grid(row=5, column=0, sticky="nsew", padx=5, pady=2)
+
+        self.change_column_drop2 = ttk.Combobox(self.data_frame, values=[])
+        self.change_column_drop2.grid(row=5, column=1, sticky="nsew", padx=5, pady=2)
+
+        self.change_data_drop2.bind("<<ComboboxSelected>>", lambda _: self.fill_combo(data_drop=self.change_data_drop2, column_drop=self.change_column_drop2))
+
+        self.show_data_button1 = tkinter.Button(self.data_frame, text="Show Dataframe 1", font=self.make_button_font, command=lambda: self.show_data_text(drop=self.change_data_drop1))
+        self.show_data_button1.grid(row=6, column=0, sticky="nsw", pady=2)
+        
+        self.show_data_button2 = tkinter.Button(self.data_frame, text="Show Dataframe 2", font=self.make_button_font, command=lambda: self.show_data_text(drop=self.change_data_drop2))
+        self.show_data_button2.grid(row=6, column=1, sticky="nse", pady=2, padx=5)
+
+        self.data_text = tkinter.Text(self.data_frame, font=self.text_box_font)
+        self.data_text.grid(row=7, column=0, columnspan=2, sticky="nsew", pady=2, padx=5)
+
+        self.to_start_data_button = tkinter.Button(self.data_frame, text="To Start Page", font=self.make_button_font, command=self.make_start)
+        self.to_start_data_button.grid(row=8, column=0, sticky="nsew", padx=5, pady=2, columnspan=2)
+
+        if self.current_frame:
+            self.current_frame.grid_forget()
+            self.current_frame.destroy()
+
+        self.current_frame = self.data_frame
+        self.fit_frame()
 
     def exit_window(self):
         self.root.destroy()
@@ -343,6 +400,28 @@ class Window:
             return (data_dict[self.scatter_data_dropx.get()][self.scatter_column_dropx.get()], data_dict[self.scatter_data_dropy.get()][self.scatter_column_dropy.get()])
         except KeyError:
             messagebox.showerror(title="Data Error", message="No data was found. Pick a valid data set or column")
+
+    def show_data_text(self, drop: ttk.Combobox):
+        try:
+            data_to_show = data_dict[drop.get()].to_markdown()
+        except KeyError:
+            messagebox.showerror(title="Data Error", message="No data was found. Pick a valid data set or column")
+            return
+
+        self.data_text.delete("1.0", tkinter.END)
+        self.data_text.insert("1.0", data_to_show)
+
+    def change_data(self):
+        try:
+            dataframe = data_dict[self.change_data_drop1.get()]
+            col1 = data_dict[self.change_data_drop1.get()][self.change_column_drop1.get()]
+            col2 = data_dict[self.change_data_drop2.get()][self.change_column_drop2.get()]
+        except KeyError:
+            messagebox.showerror(title="Data Error", message="No data was found. Pick a valid data set or column")
+            return
+        
+        data.change_in_data(dataframe, col1, col2)
+        self.show_data_text(self.change_data_drop1)
 
     def get_bar_settings(self):
         self.bar_title = self.bar_title_textbox.get()

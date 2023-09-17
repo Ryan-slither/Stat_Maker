@@ -13,8 +13,8 @@ gdp = gdp[gdp["Description"].str.contains("dollar GDP")].set_index("GeoName").dr
 # Arrests per 100,000 residents
 crime = pd.read_csv("./crime_1973.csv").rename({"Unnamed: 0": "State"}, axis=1).set_index("State")
 
-def change_in_data(data: pd.DataFrame, col1: str, col2: str):
-    data[f"change_{col1}-{col2}"] = pd.Series((data[col2] - data[col1]) / data[col2])
+def change_in_data(dataframe_to_add: pd.DataFrame, data1: pd.Series, data2: pd.Series):
+    dataframe_to_add[f"change_{data1.name}-{data2.name}"] = pd.Series((data2 - data1) / data1)
 
 if __name__ == "__main__":
     print(gdp.to_markdown())
