@@ -3,7 +3,6 @@ from tkinter import font as tkfont
 from tkinter import ttk, messagebox
 import data
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
 
 data_dict = {"GDP": data.gdp, "Population": data.population, "Crime": data.crime}

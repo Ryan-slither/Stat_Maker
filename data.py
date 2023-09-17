@@ -1,5 +1,4 @@
 import pandas as pd
-import typing
 
 # Formatting of population data
 population = pd.read_csv("./pop_chg20-22.csv")[["NAME", "ESTIMATESBASE2020", "PPOPCHG_2020", "PPOPCHG_2021", "PPOPCHG_2022"]]
