@@ -1,4 +1,4 @@
-# Stats_Maker
+# Stat_Maker
  - GUI for making Bar and Scatter plots
  - Uses Numpy, Pandas, Tkinter, and Matplotlib
  - Data set suggestions are welcome!
