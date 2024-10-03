@@ -7,7 +7,7 @@ def make_app():
     window = tkinter.Tk()
     app.Window(window)
     window.title("Stat Maker")
-    window.geometry("500x620")
+    window.geometry("600x800")
     window.mainloop()
 
 if __name__ == "__main__":
